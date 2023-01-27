@@ -29,7 +29,7 @@ function App() {
   const [showPicker, setShowPicker] = useState(false);
   const [scroll, setScroll] = useState(0);
   const pickerRef = useRef(null)
-  const handleShowPicker = (e) => {
+  const handleShowPicker = () => {
     setShowPicker(!showPicker)
   };
 
@@ -53,9 +53,7 @@ function App() {
 
   useEffect(() => {
     document.body.addEventListener('click', (e) => {
-      console.log(e)
       const className = e.target.parentNode.className;
-      console.log(className)
       if (!className.includes('picker') && !className.includes('control')) {
         setShowPicker(false)
       }
@@ -146,11 +144,11 @@ function App() {
 
         </div>
       </div>
-      {!show && <>
+      {/* {!show && <>
         <div className='hover'> </div>
         <div className='calendar-form'> </div>
       </>
-      }
+      } */}
 
 
       <Calendar year={year} month={month}></Calendar>
