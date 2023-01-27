@@ -247,5 +247,78 @@
 
 .calendar-picker-months li:hover {
   background-color: #68bad3;
-  color:rgb(255, 255, 255)
+  color: rgb(255, 255, 255);
+}
+
+/** form **/
+.form {
+  height: 100vh;
+  width: 500px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  box-shadow: 3px 3px 12px rgba(139, 139, 139, 0.594);
+}
+.calendar-form {
+  box-sizing: border-box;
+  padding: 20px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.form-header {
+  color: rgb(255, 255, 255);
+  text-align: center;
+  padding: 50px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 20px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #272727;
+  border-radius: 4px;
+  resize: none;
+  margin-bottom: 20px;
+}
+
+.form-input--discription {
+  padding: 20px 20px;
+}
+
+.form-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin: 0 0px; 
+  column-gap: 20%;
+}
+
+.form-input--time {
+  margin: auto;
+  width: 30%;
+}
+
+.form-input--date {
+  margin: 10px auto;
+  width: 30%;
+}
+
+.form-title {
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+  padding: 2px;
+  color: #bcbcbc
+}
+
+.form-bottom-titles {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 20px;
+  text-align: right ;
 }

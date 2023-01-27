@@ -6,6 +6,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Form } from './Form';
 
 export const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 export const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -25,7 +26,7 @@ export const dateFunc = (month, year) => {
 function App() {
   const [year, setYear] = useState(dateFunc(0, 2023).getFullYear());
   const [month, setMonth] = useState(dateFunc(0, 2023).getMonth());
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [scroll, setScroll] = useState(0);
   const pickerRef = useRef(null)
@@ -54,8 +55,12 @@ function App() {
   useEffect(() => {
     document.body.addEventListener('click', (e) => {
       const className = e.target.parentNode.className;
+      console.log(className)
       if (!className.includes('picker') && !className.includes('control')) {
         setShowPicker(false)
+      }
+      if(!className.includes('form') && !className.includes('add-button')) {
+        setShow(false)
       }
     });
   }, [])
@@ -81,6 +86,11 @@ function App() {
 
   return (
     <div className="App">
+
+      {show && <Form>
+
+      </Form>
+      }
       <div className='calendar-control calendar-control--main'>
         <span className='calendar-add-button' onClick={() => setShow(!show)}>
           <AddCircleIcon ></AddCircleIcon>
@@ -110,13 +120,13 @@ function App() {
                   sx={{ position: 'absolute', left: -8, bottom: 26, color: 'black' }}
                   onClick={handleScrollDown}
                 ></ArrowDropDownIcon>
-                {new Array(15).fill(year + scroll).map((y, index) => {
+                {new Array(15).fill((year + 1 + scroll)).map((y, index) => {
                   return (
-                    <li key={index + year} className={index + 1 + y === year ? 'calendar-picker-active-year' : ''}
-                      data={y + 1 + index}
+                    <li key={index + year} className={index + y - 1 === year ? 'calendar-picker-active-year' : ''}
+
                       onClick={handleYearChange}
                     >
-                      {y + 1 + index}
+                      {y + index - 1}
 
                     </li>
                   )
@@ -144,11 +154,7 @@ function App() {
 
         </div>
       </div>
-      {/* {!show && <>
-        <div className='hover'> </div>
-        <div className='calendar-form'> </div>
-      </>
-      } */}
+
 
 
       <Calendar year={year} month={month}></Calendar>
