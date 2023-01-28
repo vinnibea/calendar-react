@@ -1,17 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { date, days, dateFunc } from "./App";
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-
-
-
-export const Calendar = ({ month, year }) => {
+export const Calendar = ({ month, year, events }) => {
+  console.log(events);
+  const [localEvents, setEvents] = useState(() =>
+    JSON.parse(localStorage.getItem("events")).filter(
+      (e) => e.date[0] === year && e.date[1] === month
+    )
+  );
   const thisMonth = dateFunc(month, year);
   const lastMonth = dateFunc(month, year);
   const getDateDif =
     thisMonth.getDay() < 1
       ? days.length - 1
       : days.slice(1, thisMonth.getDay()).length;
+
+  useEffect(() => {
+    setEvents(() =>
+      JSON.parse(localStorage.getItem("events")).filter(
+        (e) => e.date[0] === year && e.date[1] === month
+      )
+    );
+  }, [events, year, month]);
 
   lastMonth.setDate(-getDateDif);
   return (
@@ -30,7 +40,6 @@ export const Calendar = ({ month, year }) => {
               border: "12px solid white",
             }}
           >
-            
             <div className="calendar-date">
               <span>{currentDate}</span>
               <span>{currentDay}</span>
@@ -38,7 +47,7 @@ export const Calendar = ({ month, year }) => {
           </div>
         );
       })}
-     
+
       {new Array(31).fill(0).map((day, index) => {
         if (index === 0) {
           thisMonth.setDate(index + 1);
@@ -48,6 +57,7 @@ export const Calendar = ({ month, year }) => {
 
         const currentDay = days[thisMonth.getDay()];
         const currentDate = thisMonth.getDate();
+
         return (
           <div
             key={day + index}
@@ -63,6 +73,15 @@ export const Calendar = ({ month, year }) => {
               <span>{currentDate}</span>
               <span>{currentDay}</span>
             </div>
+           <div className="calendar-events">
+           {localEvents.map((event) =>
+              event.date[2] === currentDate ? (
+                <div className="calendar-title">{event.title}</div>
+              ) : (
+                ""
+              )
+            )}
+             </div>
           </div>
         );
       })}

@@ -28,6 +28,7 @@ function App() {
   const [month, setMonth] = useState(dateFunc(0, 2023).getMonth());
   const [show, setShow] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
+  const [events, setEvents] = useState([]);
   const [scroll, setScroll] = useState(0);
   const pickerRef = useRef(null)
   const handleShowPicker = () => {
@@ -42,14 +43,18 @@ function App() {
     setMonth(index)
   }
 
-
   const handleScrollUp = () => {
     setScroll(current => current - 1)
   }
 
-
   const handleScrollDown = () => {
     setScroll(current => current + 1)
+  }
+
+  const createEvent = (newEvent) => {
+    const localEvents = [...JSON.parse(localStorage.getItem('events')), newEvent];
+    localStorage.setItem('events', JSON.stringify(localEvents));
+    setEvents(() => [...JSON.parse(localStorage.getItem('events'))]);
   }
 
   useEffect(() => {
@@ -59,7 +64,7 @@ function App() {
       if (!className.includes('picker') && !className.includes('control')) {
         setShowPicker(false)
       }
-      if(!className.includes('form') && !className.includes('add-button')) {
+      if (!className.includes('form') && !className.includes('add-button')) {
         setShow(false)
       }
     });
@@ -86,21 +91,21 @@ function App() {
 
   return (
     <div className="App">
-
-      {show && <Form>
-
-      </Form>
-      }
+      {show && <Form year={year} month={month} onEventAdd={createEvent} onClose={setShow}/>}
       <div className='calendar-control calendar-control--main'>
         <span className='calendar-add-button' onClick={() => setShow(!show)}>
-          <AddCircleIcon ></AddCircleIcon>
+          <AddCircleIcon></AddCircleIcon>
         </span>
+
         <div className='calendar-control calendar-control--right'>
           <span className='calendar-control arrow' onClick={() => handlePreviousYear()}>{'<'} </span >
-          <h2 className='calendar-month'>  {months[month]} {year}
 
+          <h2 className='calendar-month'>
+            {months[month]} {year}
           </h2>
+
           <span className='calendar-control arrow' onClick={() => handleNextYear()}>{'>'} </span>
+
           <CalendarTodayIcon
             className='calendar-icon'
             id='picker'
@@ -109,55 +114,54 @@ function App() {
           />
           {showPicker && (
             <div className='calendar-picker' id='picker-content' ref={pickerRef}>
-
               <ul className='calendar-picker-years'>
                 <ArrowDropUpIcon sx={{ position: 'absolute', left: -8, top: 0, color: 'black' }}
                   onClick={handleScrollUp}
                 >
 
                 </ArrowDropUpIcon >
+
                 <ArrowDropDownIcon
                   sx={{ position: 'absolute', left: -8, bottom: 26, color: 'black' }}
                   onClick={handleScrollDown}
                 ></ArrowDropDownIcon>
                 {new Array(15).fill((year + 1 + scroll)).map((y, index) => {
                   return (
-                    <li key={index + year} className={index + y - 1 === year ? 'calendar-picker-active-year' : ''}
-
+                    <li
+                      key={index + year}
+                      className={index + y - 1 === year ? 'calendar-picker-active-year' : ''}
                       onClick={handleYearChange}
                     >
                       {y + index - 1}
-
                     </li>
                   )
 
                 })}
               </ul>
 
-
               <div className='calendar-picker calendar-picker--months'>
                 <ul className='calendar-picker-months'>
                   {months.map((m, index) => {
                     return (
-                      <li key={index + month} className={index === month ? 'calendar-picker-active-month' : ''}
+                      <li
+                        key={index + month}
+                        className={index === month ? 'calendar-picker-active-month' : ''}
                         onClick={() => handleMonthChange(index)}
                       >
                         {m}
                       </li>
                     )
-
                   })}
                 </ul>
               </div>
             </div>
           )}
-
         </div>
       </div>
 
 
 
-      <Calendar year={year} month={month}></Calendar>
+      <Calendar year={year} month={month}  events={events}></Calendar>
     </div>
   );
 }
