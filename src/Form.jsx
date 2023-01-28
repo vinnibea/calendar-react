@@ -10,7 +10,7 @@ export const Form = ({ year, month, onEventAdd, onClose }) => {
   const [description, setDescription] = useState("");
   const [time, setTime] = useState("");
 
-  const handleSumbit = (e, date, time, title, description) => {
+  const handleSubmit = (e, date, time, title, description) => {
     e.preventDefault();
     const [y, m, d] = date.split("-").map((el, i) => {
       if (i === 1) {
@@ -30,7 +30,7 @@ export const Form = ({ year, month, onEventAdd, onClose }) => {
   return (
     <form
       className="form"
-      onSubmit={(e) => handleSumbit(e, date, time, title, description)}
+      onSubmit={(e) => handleSubmit(e, date, time, title, description)}
     >
       {" "}
       <CancelIcon

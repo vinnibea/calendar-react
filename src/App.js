@@ -52,9 +52,9 @@ function App() {
   }
 
   const createEvent = (newEvent) => {
-    const localEvents = [...JSON.parse(localStorage.getItem('events')) || events, newEvent];
+    const localEvents = localStorage.getItem('events') ? [...JSON.parse(localStorage.getItem('events')), newEvent] : [...events, newEvent] ;
     localStorage.setItem('events', JSON.stringify(localEvents));
-    setEvents(() => [...JSON.parse(localStorage.getItem('events'))]);
+    setEvents([...JSON.parse(localStorage.getItem('events'))]);
   }
 
   useEffect(() => {
