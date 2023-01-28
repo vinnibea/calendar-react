@@ -3,11 +3,15 @@ import { date, days, dateFunc } from "./App";
 
 export const Calendar = ({ month, year, events }) => {
   console.log(events);
-  const [localEvents, setEvents] = useState(() =>
-    JSON.parse(localStorage.getItem("events")).filter(
-      (e) => e.date[0] === year && e.date[1] === month
-    )
-  );
+  const [localEvents, setEvents] = useState(() => {
+    if (localStorage.getItem("events")) {
+      return JSON.parse(localStorage.getItem("events")).filter(
+        (e) => e.date[0] === year && e.date[1] === month
+      );
+    } else {
+      return events;
+    }
+  });
   const thisMonth = dateFunc(month, year);
   const lastMonth = dateFunc(month, year);
   const getDateDif =
@@ -16,11 +20,13 @@ export const Calendar = ({ month, year, events }) => {
       : days.slice(1, thisMonth.getDay()).length;
 
   useEffect(() => {
-    setEvents(() =>
-      JSON.parse(localStorage.getItem("events")).filter(
-        (e) => e.date[0] === year && e.date[1] === month
-      )
-    );
+    if (localStorage.getItem("events") && events) {
+      setEvents(() =>
+        JSON.parse(localStorage.getItem("events")).filter(
+          (e) => e.date[0] === year && e.date[1] === month
+        )
+      );
+    }
   }, [events, year, month]);
 
   lastMonth.setDate(-getDateDif);
@@ -73,15 +79,15 @@ export const Calendar = ({ month, year, events }) => {
               <span>{currentDate}</span>
               <span>{currentDay}</span>
             </div>
-           <div className="calendar-events">
-           {localEvents.map((event) =>
-              event.date[2] === currentDate ? (
-                <div className="calendar-title">{event.title}</div>
-              ) : (
-                ""
-              )
-            )}
-             </div>
+            <div className="calendar-events">
+              {localEvents.map((event) =>
+                event.date[2] === currentDate ? (
+                  <div className="calendar-title">{event.title}</div>
+                ) : (
+                  ""
+                )
+              )}
+            </div>
           </div>
         );
       })}
