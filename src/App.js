@@ -30,6 +30,7 @@ function App() {
   const [showPicker, setShowPicker] = useState(false);
   const [events, setEvents] = useState([]);
   const [scroll, setScroll] = useState(0);
+  const [selectedEvent, setSelectedEvent] = useState();
   const pickerRef = useRef(null)
   const handleShowPicker = () => {
     setShowPicker(!showPicker)
@@ -52,7 +53,7 @@ function App() {
   }
 
   const createEvent = (newEvent) => {
-    const localEvents = localStorage.getItem('events') ? [...JSON.parse(localStorage.getItem('events')), newEvent] : [...events, newEvent] ;
+    const localEvents = localStorage.getItem('events') ? [...JSON.parse(localStorage.getItem('events')), newEvent] : [...events, newEvent];
     localStorage.setItem('events', JSON.stringify(localEvents));
     setEvents([...JSON.parse(localStorage.getItem('events'))]);
   }
@@ -64,47 +65,52 @@ function App() {
       if (!className.includes('picker') && !className.includes('control')) {
         setShowPicker(false)
       }
-      if (!className.includes('form') && !className.includes('add-button')) {
+      if (!className.includes('form') && !className.includes('add-button') && selectedEvent) {
         setShow(false)
       }
     });
   }, [])
 
   const handlePreviousYear = () => {
+    console.log(month)
     if (month === 0) {
-      setYear(dateFunc(11, year - 1).getFullYear())
-      setMonth(dateFunc(11, year).getMonth());
+      setYear(currentYear => currentYear - 1)
+      setMonth(11);
       return;
     }
-    setMonth(() => dateFunc(month - 1, year).getMonth());
+    setMonth(currentMonth => currentMonth - 1);
   }
 
   const handleNextYear = () => {
     if (month === 11) {
-      setYear(dateFunc(0, year + 1).getFullYear());
-      setMonth(dateFunc(0, year + 1).getMonth());
+      setYear(currentYear => currentYear + 1);
+      setMonth(0);
       return;
     };
-    setMonth(dateFunc(month + 1, year).getMonth());
-    setYear(dateFunc(month + 1, year).getFullYear());
+    setMonth(currentMonth => currentMonth + 1);
+  }
+
+  const handleSelection = (select) => {
+    setShow(true);
+    setSelectedEvent(select);
   }
 
   return (
     <div className="App">
-      {show && <Form year={year} month={month} onEventAdd={createEvent} onClose={setShow}/>}
+      {show && <Form year={year} month={month} onEventAdd={createEvent} onClose={setShow} currentEvent={selectedEvent} />}
       <div className='calendar-control calendar-control--main'>
         <span className='calendar-add-button' onClick={() => setShow(!show)}>
           <AddCircleIcon></AddCircleIcon>
         </span>
 
         <div className='calendar-control calendar-control--right'>
-          <span className='calendar-control arrow' onClick={() => handlePreviousYear()}>{'<'} </span >
+          <span className='calendar-control arrow' onClick={handlePreviousYear}>{'<'} </span >
 
           <h2 className='calendar-month'>
             {months[month]} {year}
           </h2>
 
-          <span className='calendar-control arrow' onClick={() => handleNextYear()}>{'>'} </span>
+          <span className='calendar-control arrow' onClick={handleNextYear}>{'>'} </span>
 
           <CalendarTodayIcon
             className='calendar-icon'
@@ -161,7 +167,7 @@ function App() {
 
 
 
-      <Calendar year={year} month={month}  events={events}></Calendar>
+      <Calendar year={year} month={month} events={events} onEventSelect={handleSelection}></Calendar>
     </div>
   );
 }

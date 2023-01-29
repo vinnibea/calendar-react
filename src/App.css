@@ -1,20 +1,35 @@
 :root {
   --calendar-width: 150px;
   scroll-behavior: smooth;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
   background-color: rgb(213, 213, 213);
   position: relative;
 }
+*::-webkit-scrollbar {
+  width: 6px; /* width of the entire scrollbar */
+}
 
+*::-webkit-scrollbar-track {
+  background: rgb(172, 172, 172); /* color of the tracking area */
+  border-radius: 4px;
+  border: 1px solid #225e9b65;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(44, 44, 44, 0.059); /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+  border: 3px solid rgb(255, 255, 255); /* creates padding around scroll thumb */
+  box-shadow: 0 6px 2px #17171799;
+}
 .App {
-  margin: 0 auto;
+  margin: 20px auto;
   width: calc(var(--calendar-width) * 7.08);
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 0 120px 20px;
   border-radius: 8px;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 /** calendar **/
@@ -25,6 +40,7 @@
   gap: 4px;
   flex-wrap: wrap;
   width: calc(var(--calendar-width) * 8);
+  transition: all 0.3s ease;
 }
 
 .calendar-control--main {
@@ -46,10 +62,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 5px;
+  height: 80px;
+  padding: 10px;
   width: var(--calendar-width);
-  height: 100px;
-  background: rgb(255, 255, 255);
+  background: rgb(203, 203, 203);
   border: 1px solid rgba(222, 222, 222, 0.441);
   color: rgb(40, 40, 40);
   box-shadow: 0 2px 5px rgb(169, 169, 169);
@@ -75,11 +91,13 @@
   align-items: center;
   text-align: center;
   font-weight: bold;
-  color: rgba(29, 29, 29, 0.8);
+  color: rgba(103, 103, 103, 0.396);
   cursor: pointer;
-
+  border: 1px solid rgba(96, 96, 96, 0.22);
+  text-shadow: 2px 2px 8px #b9b9b9;
   border-radius: 50%;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 3px rgb(79, 79, 79);
 }
 
 .calendar-month {
@@ -89,7 +107,7 @@
 }
 
 .arrow:hover {
-  background-color: rgba(35, 77, 168, 0.641);
+  background-color: rgba(234, 234, 234, 0.641);
 }
 
 .calendar-date {
@@ -102,20 +120,27 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  padding: 2px 10px 0;
-  gap: 4px;
+  padding: 2px 10px 4px;
+  gap: 10px;
   box-sizing: border-box;
-  margin-top: 5px;
-  height: 90%;
+  margin-top: 2px;
+  height: 100%;
   overflow-y: hidden;
 }
 .calendar-title {
-  background-color: #e7e7e73e;
-  color:rgb(110, 110, 110);
+  background-color: #e7e7e7b3;
+  color: rgb(60, 60, 60);
   text-align: left;
   font-size: 12px;
-  padding: 4px 10px;
+  padding: 8px 10px;
   border-radius: 5px;
+  box-shadow: 0 4px 5px rgb(0, 0, 0);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.calendar-title:hover {
+  background-color: #ffffffd1;
 }
 
 .calendar-add-button {
@@ -138,6 +163,10 @@
 .calendar-add-button:hover {
   opacity: 1;
 }
+.calendar-icon {
+  margin-left: 6px;
+  box-shadow: 0 2px 5px rgb(52, 52, 52);
+}
 /** form **/
 
 .calendar-form {
@@ -146,9 +175,9 @@
   top: 0;
   bottom: 0;
   left: 0;
-  background-color: #225e9b;
+  background-color: #868686;
   z-index: 3;
-  box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.594);
+  box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.216);
 }
 
 .hover {
@@ -157,7 +186,7 @@
   top: 0;
   bottom: 0;
   left: 0;
-  background-color: #171717;
+  background-color: #565656;
   opacity: 0.95;
   z-index: 2;
 }
@@ -282,9 +311,10 @@
   top: 0;
   bottom: 0;
   left: 0;
-  box-shadow: 3px 3px 12px rgba(139, 139, 139, 0.594);
+  box-shadow: 16px 0px 12px rgba(27, 27, 27, 0.575);
 }
 .calendar-form {
+  height: 100vh;
   box-sizing: border-box;
   padding: 20px 40px;
   display: flex;
@@ -292,9 +322,10 @@
   align-items: center;
 }
 .form-header {
-  color: rgb(255, 255, 255);
+  color: rgba(224, 224, 224, 0.287);
   text-align: center;
   padding: 50px;
+  text-shadow: 0 2px 2px #17171731;
 }
 
 .form-input {
@@ -306,6 +337,7 @@
   border-radius: 4px;
   resize: none;
   margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(47, 47, 47, 0.657);
 }
 
 .form-input--discription {
@@ -316,7 +348,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  margin: 0 0px; 
+  margin: 0 0px;
   column-gap: 20%;
 }
 
@@ -336,7 +368,8 @@
   padding: 0;
   text-transform: uppercase;
   padding: 2px;
-  color: #bcbcbc
+  color: #dcdcdc;
+  text-shadow: 0 2px 2px #171717;
 }
 
 .form-bottom-titles {
@@ -344,5 +377,38 @@
   justify-content: space-between;
   width: 100%;
   padding: 0 20px;
-  text-align: right ;
+  text-align: right;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-bin {
+  color: white;
+  background: rgb(123, 12, 12);
+  width: 35px;
+  height: 35px;
+  border-radius: 4px;
+  padding: 5px;
+  box-sizing: border-box;
+  opacity: 0.8;
+  box-shadow: 0 4px 12px rgba(47, 47, 47, 0.657);
+  cursor: pointer;
+}
+
+.form-bin:hover {
+  opacity: 1;
+}
+
+.form-article-status {
+  text-align: left;
+  margin: 0 0;
+  padding-right: 250px;
+  text-transform: lowercase;
+  font-weight: 500;
+  color: rgb(199, 199, 199);
 }

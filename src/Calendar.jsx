@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { date, days, dateFunc } from "./App";
 
-export const Calendar = ({ month, year, events }) => {
-//   console.log(events);
+export const Calendar = ({ month, year, events, onEventSelect }) => {
   const [localEvents, setEvents] = useState(() => {
     if (localStorage.getItem("events")) {
       return JSON.parse(localStorage.getItem("events")).filter(
@@ -13,6 +12,7 @@ export const Calendar = ({ month, year, events }) => {
       return events;
     }
   });
+
   const thisMonth = dateFunc(month, year);
   const lastMonth = dateFunc(month, year);
   const getDateDif =
@@ -64,7 +64,9 @@ export const Calendar = ({ month, year, events }) => {
 
         const currentDay = days[thisMonth.getDay()];
         const currentDate = thisMonth.getDate();
-
+        const eventsThisDay = localEvents.filter(
+          (event) => event.date[2] === currentDate
+        );
         return (
           <div
             key={day + index}
@@ -80,14 +82,27 @@ export const Calendar = ({ month, year, events }) => {
               <span>{currentDate}</span>
               <span>{currentDay}</span>
             </div>
-            <div className="calendar-events">
-              {localEvents.map((event) =>
-                event.date[2] === currentDate ? (
-                  <div className="calendar-title">{event.title}</div>
-                ) : (
-                  ""
-                )
-              )}
+            <div
+              className="calendar-events"
+              style={
+                eventsThisDay.length >= 2
+                  ? {
+                      overflowY: "scroll",
+                      border: "2px solid rgba(16, 15, 15, 0.148)",
+                      backgroundColor: "rgb(80, 80, 80)",
+                      borderRadius: "8px",
+                    }
+                  : {overflow: 'inherit'}
+              }
+            >
+              {eventsThisDay.map((event) => (
+                <div
+                  className="calendar-title"
+                  onClick={() => onEventSelect(event)}
+                >
+                  {event.title}
+                </div>
+              ))}
             </div>
           </div>
         );

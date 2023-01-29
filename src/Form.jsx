@@ -1,14 +1,26 @@
 import React, { useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Button } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-export const Form = ({ year, month, onEventAdd, onClose }) => {
-  const [date, setDate] = useState(
-    `${year}-${month < 10 ? `0` + (month + 1) : month}-${new Date().getDate()}`
+export const Form = ({ year, month, onEventAdd, onClose, currentEvent }) => {
+  const [date, setDate] = useState(() => {
+    if (!currentEvent) {
+      return `${year}-${
+        month < 10 ? `0` + (month + 1) : month
+      }-${new Date().getDate()}`;
+    } else {
+      const [y, m, d] = currentEvent.date;
+      return `${y}-${m < 10 ? `0` + (m + 1) : m}-${d < 10 ? "0" + d : d}`;
+    }
+  });
+  const [title, setTitle] = useState(currentEvent ? currentEvent.title : "");
+  const [description, setDescription] = useState(
+    currentEvent ? currentEvent.description : ""
   );
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [time, setTime] = useState("");
+  const [time, setTime] = useState(currentEvent ? currentEvent.time : "");
+
+  console.log(currentEvent, date, time);
 
   const handleSubmit = (e, date, time, title, description) => {
     e.preventDefault();
@@ -24,6 +36,7 @@ export const Form = ({ year, month, onEventAdd, onClose }) => {
       time,
       description,
       title,
+      updated: false,
     });
     setTimeout(() => onClose(false), 1000);
   };
@@ -44,18 +57,21 @@ export const Form = ({ year, month, onEventAdd, onClose }) => {
       ></CancelIcon>
       <div className="calendar-form">
         <h2 className="form-header">Add new idea item</h2>
+        {currentEvent && currentEvent.updated == false && <h5 className="form-article-status">Created At: {date.replace(/[-]/gi, '.')} {time} </h5>}
         <h3 className="form-title">Title*</h3>
         <input
           className="form-input form-input--main"
           type="text"
           placeholder="Title goes here"
+          value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
         ></input>
         <h3 className="form-title">Description</h3>
         <textarea
           className="form-input form-input--discription"
-          placeholder="Discription"
+          placeholder="Description"
+          value={description}
           rows={6}
           onChange={(e) => setDescription(e.target.value)}
         ></textarea>
@@ -77,12 +93,29 @@ export const Form = ({ year, month, onEventAdd, onClose }) => {
 
           <input
             type="time"
+            value={time}
             className="form-input form-input--time"
             onChange={(e) => setTime(e.target.value)}
           ></input>
-          <Button variant="contained" sx={{ background: "grey" }} type="submit">
-            Save
-          </Button>
+          <div className="form-buttons">
+            {currentEvent && (
+              <DeleteIcon
+                className="form-bin"
+                sx={{
+                  width: "35px",
+                  height: "35px",
+                  transition: "all 0.3s ease",
+                }}
+              ></DeleteIcon>
+            )}
+            <Button
+              variant="contained"
+              sx={{ background: "grey", transition: "all 0.3s ease" }}
+              type="submit"
+            >
+              Save
+            </Button>
+          </div>
         </div>
       </div>
     </form>
