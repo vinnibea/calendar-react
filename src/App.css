@@ -398,6 +398,7 @@
   opacity: 0.8;
   box-shadow: 0 4px 12px rgba(47, 47, 47, 0.657);
   cursor: pointer;
+  
 }
 
 .form-bin:hover {
@@ -407,8 +408,8 @@
 .form-article-status {
   text-align: left;
   margin: 0 0;
-  padding-right: 250px;
+  width: 450px;
   text-transform: lowercase;
   font-weight: 500;
-  color: rgb(199, 199, 199);
+  color:rgb(199, 199, 199)
 }

@@ -53,9 +53,33 @@ function App() {
   }
 
   const createEvent = (newEvent) => {
-    const localEvents = localStorage.getItem('events') ? [...JSON.parse(localStorage.getItem('events')), newEvent] : [...events, newEvent];
-    localStorage.setItem('events', JSON.stringify(localEvents));
-    setEvents([...JSON.parse(localStorage.getItem('events'))]);
+    let localEvents = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : [...events];
+
+    if (newEvent.updated) {
+      localEvents = localEvents.map(e => {
+        if (e.id !== newEvent.id) {
+
+          return e;
+        }
+
+        console.log('something')
+        return {
+          ...e,
+          ...newEvent
+        }
+
+      });
+
+      localStorage.setItem('events', JSON.stringify(localEvents));
+      setEvents([...JSON.parse(localStorage.getItem('events'))]);
+      setSelectedEvent();
+    } else {
+
+      localStorage.setItem('events', JSON.stringify([...localEvents, newEvent]));
+      setEvents([...JSON.parse(localStorage.getItem('events'))]);
+      setSelectedEvent();
+      setShow(false);
+    }
   }
 
   useEffect(() => {
@@ -65,11 +89,20 @@ function App() {
       if (!className.includes('picker') && !className.includes('control')) {
         setShowPicker(false)
       }
-      if (!className.includes('form') && !className.includes('add-button') && selectedEvent) {
-        setShow(false)
+      if (!className.includes('form') && !className.includes('add-button') && !className.includes('calendar-events')) {
+        setShow(false);
+        setSelectedEvent();
       }
     });
   }, [])
+
+  const handleDelete = (id) => {
+    let localEvents = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')).filter(e => e.id !== id) : [...events];
+    localStorage.setItem('events', JSON.stringify(localEvents));
+    setEvents([...JSON.parse(localStorage.getItem('events'))]);
+    setSelectedEvent();
+    setShow(false);
+  }
 
   const handlePreviousYear = () => {
     console.log(month)
@@ -97,7 +130,14 @@ function App() {
 
   return (
     <div className="App">
-      {show && <Form year={year} month={month} onEventAdd={createEvent} onClose={setShow} currentEvent={selectedEvent} />}
+      {show && <Form
+        year={year}
+        month={month}
+        onEventAdd={createEvent}
+        onClose={setShow}
+        onDelete={handleDelete}
+        currentEvent={selectedEvent}
+      />}
       <div className='calendar-control calendar-control--main'>
         <span className='calendar-add-button' onClick={() => setShow(!show)}>
           <AddCircleIcon></AddCircleIcon>

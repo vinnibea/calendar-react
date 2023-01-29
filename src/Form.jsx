@@ -3,7 +3,14 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export const Form = ({ year, month, onEventAdd, onClose, currentEvent }) => {
+export const Form = ({
+  year,
+  month,
+  onEventAdd,
+  onClose,
+  currentEvent,
+  onDelete,
+}) => {
   const [date, setDate] = useState(() => {
     if (!currentEvent) {
       return `${year}-${
@@ -20,8 +27,6 @@ export const Form = ({ year, month, onEventAdd, onClose, currentEvent }) => {
   );
   const [time, setTime] = useState(currentEvent ? currentEvent.time : "");
 
-  console.log(currentEvent, date, time);
-
   const handleSubmit = (e, date, time, title, description) => {
     e.preventDefault();
     const [y, m, d] = date.split("-").map((el, i) => {
@@ -31,15 +36,31 @@ export const Form = ({ year, month, onEventAdd, onClose, currentEvent }) => {
       return +el;
     });
 
-    onEventAdd({
-      date: [y, m, d],
-      time,
-      description,
-      title,
-      updated: false,
-    });
+    if (!currentEvent) {
+      onEventAdd({
+        id: title,
+        date: [y, m, d],
+        time,
+        description,
+        title,
+        updated: false,
+      });
+
+      return;
+    } else {
+      onEventAdd({
+        ...currentEvent,
+        date: [y, m, d],
+        time,
+        description,
+        title,
+        updated: true,
+      });
+      console.log("update");
+    }
     setTimeout(() => onClose(false), 1000);
   };
+  console.log(currentEvent);
   return (
     <form
       className="form"
@@ -56,8 +77,18 @@ export const Form = ({ year, month, onEventAdd, onClose, currentEvent }) => {
         }}
       ></CancelIcon>
       <div className="calendar-form">
-        <h2 className="form-header">Add new idea item</h2>
-        {currentEvent && currentEvent.updated == false && <h5 className="form-article-status">Created At: {date.replace(/[-]/gi, '.')} {time} </h5>}
+        <h2 className="form-header">
+          {currentEvent && currentEvent.updated
+            ? `Edit item`
+            : `Add new idea item`}
+        </h2>
+        {currentEvent && (
+          <h5 className="form-article-status">
+            {currentEvent.updated
+              ? `Updated at: ${date.replace(/[-]/gi, ".")} ${currentEvent.time}`
+              : `Created At ${date.replace(/[-]/gi, ".")} ${currentEvent.time}`}
+          </h5>
+        )}
         <h3 className="form-title">Title*</h3>
         <input
           className="form-input form-input--main"
@@ -106,6 +137,7 @@ export const Form = ({ year, month, onEventAdd, onClose, currentEvent }) => {
                   height: "35px",
                   transition: "all 0.3s ease",
                 }}
+                onClick={() => onDelete(currentEvent.id)}
               ></DeleteIcon>
             )}
             <Button
