@@ -26,6 +26,7 @@ export const Form = ({
     currentEvent ? currentEvent.description : ""
   );
   const [time, setTime] = useState(currentEvent ? currentEvent.time : "");
+  console.log(date);
 
   const handleSubmit = (e, date, time, title, description) => {
     e.preventDefault();

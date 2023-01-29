@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { useEffect, useRef, useState } from 'react';
 import { Calendar } from './Calendar';
@@ -7,6 +6,10 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Form } from './Form';
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
+
 
 export const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 export const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -15,41 +18,53 @@ export const date = new Date();
 
 export const dateFunc = (month, year) => {
   const date = new Date();
-  date.setMonth(month);
-  date.setYear(year);
+  date.setMonth(+month);
+  date.setYear(+year);
   date.setDate(1);
   return date;
 }
 
-
+const dateFromSearchParams = (path, months) => {
+  const dateArray = path.search.replace(/[=&]/gi, '-').split('-');
+  const month = months.indexOf(dateArray[1]);
+  const year = dateArray[3];
+  return [+month, +year];
+}
 
 function App() {
-  const [year, setYear] = useState(dateFunc(0, 2023).getFullYear());
-  const [month, setMonth] = useState(dateFunc(0, 2023).getMonth());
+  const location = useLocation();
+  const navigate = useNavigate();
+  const pickerRef = useRef(null);
+
+  const [year, setYear] = useState();
+  const [month, setMonth] = useState();
   const [show, setShow] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [events, setEvents] = useState([]);
   const [scroll, setScroll] = useState(0);
   const [selectedEvent, setSelectedEvent] = useState();
-  const pickerRef = useRef(null)
+
   const handleShowPicker = () => {
     setShowPicker(!showPicker)
   };
 
   const handleYearChange = (e) => {
-    setYear(Number(e.target.textContent))
+    const selectedYear = e.target.textContent;
+    setYear(Number(selectedYear));
+    navigate(`calendar?month=${months[month]}&year=${selectedYear}`)
   }
 
   const handleMonthChange = (index) => {
-    setMonth(index)
+    setMonth(index);
+    navigate(`calendar?month=${months[index]}&year=${year}`)
   }
 
   const handleScrollUp = () => {
-    setScroll(current => current - 1)
+    setScroll(current => current - 1);
   }
 
   const handleScrollDown = () => {
-    setScroll(current => current + 1)
+    setScroll(current => current + 1);
   }
 
   const createEvent = (newEvent) => {
@@ -62,7 +77,6 @@ function App() {
           return e;
         }
 
-        console.log('something')
         return {
           ...e,
           ...newEvent
@@ -83,9 +97,25 @@ function App() {
   }
 
   useEffect(() => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    setTimeout(() => {
+      if (!location.search) {
+        navigate(`calendar?month=${months[currentMonth]}&year=${currentYear}`)
+        setMonth(currentMonth);
+        setYear(currentYear);
+      } else {
+        const monthSelected = dateFromSearchParams(location, months)[0];
+        const yearSelected = dateFromSearchParams(location, months)[1];
+        setMonth(monthSelected);
+        setYear(yearSelected);
+      }
+    }, 500)
+
     document.body.addEventListener('click', (e) => {
       const className = e.target.parentNode.className;
-      console.log(className)
       if (!className.includes('picker') && !className.includes('control')) {
         setShowPicker(false)
       }
@@ -105,22 +135,25 @@ function App() {
   }
 
   const handlePreviousYear = () => {
-    console.log(month)
     if (month === 0) {
-      setYear(currentYear => currentYear - 1)
+      setYear(currentYear => currentYear - 1);
       setMonth(11);
+      navigate(`calendar?month=${months[11]}&year=${year}`);
       return;
     }
     setMonth(currentMonth => currentMonth - 1);
+    navigate(`calendar?month=${months[month - 1]}&year=${year}`);
   }
 
   const handleNextYear = () => {
     if (month === 11) {
       setYear(currentYear => currentYear + 1);
       setMonth(0);
+      navigate(`calendar?month=${months[0]}&year=${year}`);
       return;
     };
     setMonth(currentMonth => currentMonth + 1);
+    navigate(`calendar?month=${months[month + 1]}&year=${year}`);
   }
 
   const handleSelection = (select) => {
@@ -128,7 +161,7 @@ function App() {
     setSelectedEvent(select);
   }
 
-  return (
+  return (!isNaN(month) ? (
     <div className="App">
       {show && <Form
         year={year}
@@ -205,10 +238,10 @@ function App() {
         </div>
       </div>
 
-
-
       <Calendar year={year} month={month} events={events} onEventSelect={handleSelection}></Calendar>
     </div>
+  ) : <h1 className='loader'>Loading...</h1>
+
   );
 }
 

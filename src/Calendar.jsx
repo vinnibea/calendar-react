@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { date, days, dateFunc } from "./App";
 
 export const Calendar = ({ month, year, events, onEventSelect }) => {
@@ -64,17 +65,23 @@ export const Calendar = ({ month, year, events, onEventSelect }) => {
 
         const currentDay = days[thisMonth.getDay()];
         const currentDate = thisMonth.getDate();
+        const currentMonth = date.getMonth();
+        const currentYear = date.getFullYear();
+        const thisDay =
+          date.getDate() === index + 1 &&
+          month === currentMonth &&
+          year === currentYear;
+
         const eventsThisDay = localEvents.filter(
           (event) => event.date[2] === currentDate
         );
+
         return (
           <div
             key={day + index}
             className="calendar-day"
             style={{
-              backgroundColor: `${
-                date.getDate() === index + 1 ? "rgba(35, 77, 168, 0.341)" : ""
-              }`,
+              backgroundColor: `${thisDay ? "rgba(35, 77, 168, 0.341)" : ""}`,
               display: thisMonth.getDate() < index + 1 && "none",
             }}
           >
@@ -92,13 +99,14 @@ export const Calendar = ({ month, year, events, onEventSelect }) => {
                       backgroundColor: "rgb(80, 80, 80)",
                       borderRadius: "8px",
                     }
-                  : {overflow: 'inherit'}
+                  : { overflow: "inherit" }
               }
             >
-              {eventsThisDay.map((event) => (
+              {eventsThisDay.map((event, index) => (
                 <div
                   className="calendar-title"
                   onClick={() => onEventSelect(event)}
+                  key={event.id + index}
                 >
                   {event.title}
                 </div>

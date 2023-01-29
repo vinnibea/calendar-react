@@ -413,3 +413,8 @@
   font-weight: 500;
   color:rgb(199, 199, 199)
 }
+
+.loader {
+  text-align: center;
+  text-transform: uppercase;
+}
