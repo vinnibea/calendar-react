@@ -16,10 +16,15 @@ export const Calendar = ({ month, year, events, onEventSelect }) => {
 
   const thisMonth = dateFunc(month, year);
   const lastMonth = dateFunc(month, year);
+
+  thisMonth.setMonth(month);
   const getDateDif =
     thisMonth.getDay() < 1
       ? days.length - 1
       : days.slice(1, thisMonth.getDay()).length;
+
+  thisMonth.setMonth(month);
+  lastMonth.setDate(-getDateDif);
 
   useEffect(() => {
     if (localStorage.getItem("events") && events) {
@@ -36,8 +41,7 @@ export const Calendar = ({ month, year, events, onEventSelect }) => {
     <div className="calendar">
       {new Array(getDateDif).fill(0).map((day, index) => {
         lastMonth.setDate(lastMonth.getDate() + 1);
-        const currentDay =
-          days[lastMonth.getDay()] || lastMonth[days.length - 1];
+        const currentDay = days[lastMonth.getDay()];
         const currentDate = lastMonth.getDate();
 
         return (
@@ -59,6 +63,8 @@ export const Calendar = ({ month, year, events, onEventSelect }) => {
       {new Array(31).fill(0).map((day, index) => {
         if (index === 0) {
           thisMonth.setDate(index + 1);
+        } else if (thisMonth.getDate() + 1 < index + 1) {
+          return;
         } else {
           thisMonth.setDate(thisMonth.getDate() + 1);
         }
@@ -75,7 +81,7 @@ export const Calendar = ({ month, year, events, onEventSelect }) => {
         const eventsThisDay = localEvents.filter(
           (event) => event.date[2] === currentDate
         );
-
+        // console.log(thisMonth.getDate())
         return (
           <div
             key={day + index}

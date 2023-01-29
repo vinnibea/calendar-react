@@ -9,18 +9,15 @@ import { Form } from './Form';
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-
-
 export const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 export const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 export const date = new Date();
 
-
 export const dateFunc = (month, year) => {
   const date = new Date();
-  date.setMonth(+month);
-  date.setYear(+year);
-  date.setDate(1);
+  date.setMonth(month);
+  date.setYear(year);
+  // date.setDate(1);
   return date;
 }
 
@@ -51,7 +48,7 @@ function App() {
   const handleYearChange = (e) => {
     const selectedYear = e.target.textContent;
     setYear(Number(selectedYear));
-    navigate(`calendar?month=${months[month]}&year=${selectedYear}`)
+    navigate(`calendar?month=${months[+month]}&year=${selectedYear}`)
   }
 
   const handleMonthChange = (index) => {
@@ -138,7 +135,7 @@ function App() {
     if (month === 0) {
       setYear(currentYear => currentYear - 1);
       setMonth(11);
-      navigate(`calendar?month=${months[11]}&year=${year}`);
+      navigate(`calendar?month=${months[11]}&year=${year - 1}`);
       return;
     }
     setMonth(currentMonth => currentMonth - 1);
@@ -149,11 +146,13 @@ function App() {
     if (month === 11) {
       setYear(currentYear => currentYear + 1);
       setMonth(0);
-      navigate(`calendar?month=${months[0]}&year=${year}`);
+      navigate(`calendar?month=${months[0]}&year=${year + 1}`);
       return;
     };
     setMonth(currentMonth => currentMonth + 1);
+    
     navigate(`calendar?month=${months[month + 1]}&year=${year}`);
+    
   }
 
   const handleSelection = (select) => {
