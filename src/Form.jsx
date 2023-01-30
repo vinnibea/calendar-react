@@ -16,7 +16,7 @@ export const Form = ({
       return `${year}-${month + 1 <= 9 ? `0` + (month + 1) : month + 1}-01`;
     } else {
       const [y, m, d] = currentEvent.date;
-      return `${y}-${m + 1 <= 9 ? `0` + ((+m) + 1): +m}-${d < 10 ? "0" + d : d}`;
+      return `${y}-${+m  <= 10 ? `0`+ (+m + 1): +m + 1}-${d < 10 ? "0" + d : d}`;
     }
   });
   console.log(month, year)
@@ -48,8 +48,6 @@ export const Form = ({
 
       return;
     } else {
-    //   const [y, m, d] = date.split("-").map(n => Number(n));
-    // console.log(y, m, d)
       onEventAdd({
         ...currentEvent,
         date: [y, m, d],
