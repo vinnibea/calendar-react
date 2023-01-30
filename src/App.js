@@ -98,7 +98,7 @@ function App() {
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
 
-    // setTimeout(() => {
+    setTimeout(() => {
       if (!location.search) {
         navigate(`calendar?month=${months[currentMonth]}&year=${currentYear}`)
         setMonth(currentMonth);
@@ -109,7 +109,7 @@ function App() {
         setMonth(monthSelected);
         setYear(yearSelected);
       }
-    // }, 500)
+    }, 500)
 
     document.body.addEventListener('click', (e) => {
       const className = e.target.parentNode.className;

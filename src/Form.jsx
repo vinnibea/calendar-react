@@ -61,7 +61,7 @@ export const Form = ({
     }
     setTimeout(() => onClose(false), 1000);
   };
-  console.log(currentEvent);
+
   return (
     <form
       className="form"
