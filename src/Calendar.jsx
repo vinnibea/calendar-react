@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { date, days, dateFunc } from "./App";
 
 export const Calendar = ({ month, year, events, onEventSelect }) => {
@@ -17,14 +16,17 @@ export const Calendar = ({ month, year, events, onEventSelect }) => {
   const thisMonth = dateFunc(month, year);
   const lastMonth = dateFunc(month, year);
 
-  thisMonth.setMonth(month);
   const getDateDif =
     thisMonth.getDay() < 1
       ? days.length - 1
-      : days.slice(1, thisMonth.getDay()).length;
+      : days.slice(1, lastMonth.getDay()).length;
 
-  thisMonth.setMonth(month);
   lastMonth.setDate(-getDateDif);
+  if (month === 1) {
+    lastMonth.setMonth(0);
+    thisMonth.setMonth(1);
+    lastMonth.setDate(31 - getDateDif);
+  }
 
   useEffect(() => {
     if (localStorage.getItem("events") && events) {
@@ -36,7 +38,6 @@ export const Calendar = ({ month, year, events, onEventSelect }) => {
     }
   }, [events, year, month]);
 
-  lastMonth.setDate(-getDateDif);
   return (
     <div className="calendar">
       {new Array(getDateDif).fill(0).map((day, index) => {
@@ -81,14 +82,14 @@ export const Calendar = ({ month, year, events, onEventSelect }) => {
         const eventsThisDay = localEvents.filter(
           (event) => event.date[2] === currentDate
         );
-        // console.log(thisMonth.getDate())
+
         return (
           <div
             key={day + index}
             className="calendar-day"
             style={{
               backgroundColor: `${thisDay ? "rgba(35, 77, 168, 0.341)" : ""}`,
-              display: thisMonth.getDate() < index + 1 && "none",
+              display: thisMonth.getDate() + 1 < index + 1 && "none",
             }}
           >
             <div className="calendar-date">

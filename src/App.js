@@ -17,7 +17,7 @@ export const dateFunc = (month, year) => {
   const date = new Date();
   date.setMonth(month);
   date.setYear(year);
-  // date.setDate(1);
+  date.setDate(1);
   return date;
 }
 
@@ -25,7 +25,7 @@ const dateFromSearchParams = (path, months) => {
   const dateArray = path.search.replace(/[=&]/gi, '-').split('-');
   const month = months.indexOf(dateArray[1]);
   const year = dateArray[3];
-  return [+month, +year];
+  return [month, year];
 }
 
 function App() {
@@ -48,7 +48,7 @@ function App() {
   const handleYearChange = (e) => {
     const selectedYear = e.target.textContent;
     setYear(Number(selectedYear));
-    navigate(`calendar?month=${months[+month]}&year=${selectedYear}`)
+    navigate(`calendar?month=${months[month]}&year=${selectedYear}`)
   }
 
   const handleMonthChange = (index) => {
@@ -98,7 +98,7 @@ function App() {
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
 
-    setTimeout(() => {
+    // setTimeout(() => {
       if (!location.search) {
         navigate(`calendar?month=${months[currentMonth]}&year=${currentYear}`)
         setMonth(currentMonth);
@@ -109,7 +109,7 @@ function App() {
         setMonth(monthSelected);
         setYear(yearSelected);
       }
-    }, 500)
+    // }, 500)
 
     document.body.addEventListener('click', (e) => {
       const className = e.target.parentNode.className;
@@ -146,7 +146,7 @@ function App() {
     if (month === 11) {
       setYear(currentYear => currentYear + 1);
       setMonth(0);
-      navigate(`calendar?month=${months[0]}&year=${year + 1}`);
+      navigate(`calendar?month=${months[0]}&year=${year}`);
       return;
     };
     setMonth(currentMonth => currentMonth + 1);

@@ -15,7 +15,7 @@ export const Form = ({
     if (!currentEvent) {
       return `${year}-${
         month < 10 ? `0` + (month + 1) : month
-      }-${new Date().getDate()}`;
+      }-01`;
     } else {
       const [y, m, d] = currentEvent.date;
       return `${y}-${m < 10 ? `0` + (m + 1) : m}-${d < 10 ? "0" + d : d}`;
