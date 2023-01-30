@@ -29,7 +29,7 @@ export const Calendar = ({ month, year, events, onEventSelect }) => {
   }
 
   useEffect(() => {
-    if (localStorage.getItem("events") || events) {
+    if (localStorage.getItem("events") || events.length > 0) {
       setEvents(() =>
         JSON.parse(localStorage.getItem("events")).filter(
           (e) => e.date[0] === year && e.date[1] === month

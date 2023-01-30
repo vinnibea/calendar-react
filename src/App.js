@@ -25,7 +25,7 @@ const dateFromSearchParams = (path, months) => {
   const dateArray = path.search.replace(/[=&]/gi, '-').split('-');
   const month = months.indexOf(dateArray[1]);
   const year = dateArray[3];
-  return [month, year];
+  return [+month, +year];
 }
 
 function App() {
