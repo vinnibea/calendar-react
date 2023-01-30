@@ -16,9 +16,11 @@ export const Form = ({
       return `${year}-${month + 1 <= 9 ? `0` + (month + 1) : month + 1}-01`;
     } else {
       const [y, m, d] = currentEvent.date;
-      return `${y}-${m <= 9 ? `0` + m : m}-${d < 10 ? "0" + d : d}`;
+      return `${y}-${m + 1 <= 9 ? `0` + ((+m) + 1): +m}-${d < 10 ? "0" + d : d}`;
     }
   });
+  console.log(month, year)
+  
   const [title, setTitle] = useState(currentEvent ? currentEvent.title : "");
   const [description, setDescription] = useState(
     currentEvent ? currentEvent.description : ""
@@ -27,14 +29,14 @@ export const Form = ({
 
   const handleSubmit = (e, date, time, title, description) => {
     e.preventDefault();
-
-    if (!currentEvent) {
-      const [y, m, d] = date.split("-").map((el, i) => {
+    const [y, m, d] = date.split("-").map((el, i) => {
         if (i === 1) {
           return +el - 1;
         }
         return +el;
       });
+    if (!currentEvent) {
+    
       onEventAdd({
         id: title,
         date: [y, m, d],
@@ -46,8 +48,8 @@ export const Form = ({
 
       return;
     } else {
-      const [y, m, d] = date.split("-");
-
+    //   const [y, m, d] = date.split("-").map(n => Number(n));
+    // console.log(y, m, d)
       onEventAdd({
         ...currentEvent,
         date: [y, m, d],
