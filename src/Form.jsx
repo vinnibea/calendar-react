@@ -13,12 +13,10 @@ export const Form = ({
 }) => {
   const [date, setDate] = useState(() => {
     if (!currentEvent) {
-      return `${year}-${
-        month < 10 ? `0` + (month + 1) : month
-      }-01`;
+      return `${year}-${month + 1 <= 9 ? `0` + (month + 1) : month + 1}-01`;
     } else {
       const [y, m, d] = currentEvent.date;
-      return `${y}-${m < 10 ? `0` + (m + 1) : m}-${d < 10 ? "0" + d : d}`;
+      return `${y}-${m <= 9 ? `0` + m : m}-${d < 10 ? "0" + d : d}`;
     }
   });
   const [title, setTitle] = useState(currentEvent ? currentEvent.title : "");
@@ -26,18 +24,17 @@ export const Form = ({
     currentEvent ? currentEvent.description : ""
   );
   const [time, setTime] = useState(currentEvent ? currentEvent.time : "");
-  console.log(date);
 
   const handleSubmit = (e, date, time, title, description) => {
     e.preventDefault();
-    const [y, m, d] = date.split("-").map((el, i) => {
-      if (i === 1) {
-        return +el - 1;
-      }
-      return +el;
-    });
 
     if (!currentEvent) {
+      const [y, m, d] = date.split("-").map((el, i) => {
+        if (i === 1) {
+          return +el - 1;
+        }
+        return +el;
+      });
       onEventAdd({
         id: title,
         date: [y, m, d],
@@ -49,6 +46,8 @@ export const Form = ({
 
       return;
     } else {
+      const [y, m, d] = date.split("-");
+
       onEventAdd({
         ...currentEvent,
         date: [y, m, d],
@@ -57,7 +56,6 @@ export const Form = ({
         title,
         updated: true,
       });
-      console.log("update");
     }
     setTimeout(() => onClose(false), 1000);
   };

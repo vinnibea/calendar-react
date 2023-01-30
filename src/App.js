@@ -70,7 +70,6 @@ function App() {
     if (newEvent.updated) {
       localEvents = localEvents.map(e => {
         if (e.id !== newEvent.id) {
-
           return e;
         }
 
@@ -85,7 +84,6 @@ function App() {
       setEvents([...JSON.parse(localStorage.getItem('events'))]);
       setSelectedEvent();
     } else {
-
       localStorage.setItem('events', JSON.stringify([...localEvents, newEvent]));
       setEvents([...JSON.parse(localStorage.getItem('events'))]);
       setSelectedEvent();
@@ -146,7 +144,7 @@ function App() {
     if (month === 11) {
       setYear(currentYear => currentYear + 1);
       setMonth(0);
-      navigate(`calendar?month=${months[0]}&year=${year}`);
+      navigate(`calendar?month=${months[0]}&year=${year + 1}`);
       return;
     };
     setMonth(currentMonth => currentMonth + 1);
@@ -196,13 +194,13 @@ function App() {
                 <ArrowDropUpIcon sx={{ position: 'absolute', left: -8, top: 0, color: 'black' }}
                   onClick={handleScrollUp}
                 >
-
                 </ArrowDropUpIcon >
 
                 <ArrowDropDownIcon
                   sx={{ position: 'absolute', left: -8, bottom: 26, color: 'black' }}
                   onClick={handleScrollDown}
                 ></ArrowDropDownIcon>
+                
                 {new Array(15).fill((year + 1 + scroll)).map((y, index) => {
                   return (
                     <li
@@ -237,7 +235,12 @@ function App() {
         </div>
       </div>
 
-      <Calendar year={year} month={month} events={events} onEventSelect={handleSelection}></Calendar>
+      <Calendar
+       year={year} 
+       month={month} 
+       events={events} 
+       onEventSelect={handleSelection}
+       />
     </div>
   ) : <h1 className='loader'>Loading...</h1>
 
